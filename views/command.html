@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <form>
+      <div id="name-div">
+          <input id="leaderboard"  autocomplete="off" autofocus placeholder="leaderboard" />
+          <input id="name"  autocomplete="off" autofocus placeholder="name" />
+          <input id="score"  autocomplete="off" placeholder="score" />
+          <button>Submit</button>
+      </div>
+    </form>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+        var socket = io();
+        $('form').submit(function() {
+            if(!$('#leaderboard').val())
+            {
+                return false;
+            }
+
+            name = $('#name').val() ? $('#name').val() : 'Anonymous';
+            var msg = JSON.stringify({
+                name: name,
+                message: $('#score').val(),
+                leaderboard: $('#leaderboard').val()
+            });
+
+            console.log('message', msg);
+
+            socket.emit('new_score_command', msg);
+            $('#name').focus();
+            $('#name').val('');
+            $('#score').val('');
+            $('#leaderboard').val('');
+            return false;
+        });
+
+        socket.on('error', function(evt) {
+            $('#messages').append($('<li>').text('<span style="color: red;">ERROR:</span> ' + evt.data));
+        });
+    </script>
+  </body>
+</html>

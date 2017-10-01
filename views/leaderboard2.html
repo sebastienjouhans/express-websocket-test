@@ -1,0 +1,34 @@
+<!doctype html>
+<html>
+  <head>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <div id="welcome">Leaderboard 2</div>
+    <ul id="messages"></ul>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+        var socket = io();
+
+        socket.on('new_score_update', function(evt){
+          var data = JSON.parse(evt);
+          if(data.leaderboard == 2)
+          {
+            $('#messages').append($('<li>').html(data.message));
+            console.log(data);
+          }
+        });
+
+
+        socket.on('disconnect', function() {
+            socket.reconnect();
+        });
+
+
+        socket.on('error', function(evt) {
+            $('#messages').append($('<li>').text('<span style="color: red;">ERROR:</span> ' + evt.data));
+        });
+    </script>
+  </body>
+</html>

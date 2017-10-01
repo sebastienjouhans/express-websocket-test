@@ -1,0 +1,47 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO chat</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+  </head>
+  <body>
+    <form>
+      <div id="name-div">
+          <input id="name" name="name" autocomplete="off" autofocus placeholder="Enter your nickname" />
+          <button>Submit</button>
+      </div>
+      <div id="welcome"></div>
+      <ul id="messages"></ul>
+      <div id="input-div">
+          <input id="message" name="message" autocomplete="off" placeholder="Type your message here" />
+          <button>Send</button>
+      </div>
+  </form>
+    <script src="https://cdn.socket.io/socket.io-1.2.0.js"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+        var socket = io();
+        $('form').submit(function() {
+            name = $('#name').val() ? $('#name').val() : 'Anonymous';
+            $('#name-div').hide();
+            $('#welcome').text('Hello ' + name);
+            socket.emit('message', JSON.stringify({
+                name: name,
+                message: $('#message').val()
+            }));
+            $('#message').focus();
+            $('#message').val('');
+            return false;
+        });
+
+        socket.on('message', function(evt){
+          $('#messages').append($('<li>').html(evt));
+            console.log(evt);
+        });
+
+        socket.on('error', function(evt) {
+            $('#messages').append($('<li>').text('<span style="color: red;">ERROR:</span> ' + evt.data));
+        });
+    </script>
+  </body>
+</html>
