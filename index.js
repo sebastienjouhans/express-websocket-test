@@ -3,25 +3,27 @@ var app = express();
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 var bodyParser = require('body-parser');
-var MongoClient = require('mongodb').MongoClient;
+var mongodb = require('mongodb').MongoClient;
 
 var port = process.env.PORT || 3000;
 
 var collection;
 
 
-MongoClient.connect("mongodb://seb:password@ds151544.mlab.com:51544/leaderboard", function(err, db) {
-  if(!err) {
-    console.log("Mongodb connected");
+// mongodb.connect("mongodb://seb:password@ds151544.mlab.com:51544/leaderboard", function(err, db) {
+//   if(!err) {
+//     console.log("Mongodb connected");
 
-    collection = db.collection('test', function(err, collection) {});
+//     collection = db.collection('test', function(err, collection) {
+//       console.log(err);      
+//     });
 
-  }
-  else
-  {
-    console.log(err);
-  }
-});
+//   }
+//   else
+//   {
+//     console.log(err);
+//   }
+// });
 
 app.use(express.static(__dirname + '/public'));
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -37,7 +39,10 @@ app.get('/:path', function(req, res, next) {
 
 // command-post.html will post to this end point when the submit button is pressed
 app.post('/update-leaderboard-command', function(req, res) {
-  collection.insert(req.body);
+  if(collection)
+  {
+    //collection.insert(req.body);
+  }
   var formatedData = formatData(req.body);
   // check that this is not creating a new connection
   io.on('connection', function(socket){
@@ -51,7 +56,10 @@ app.post('/update-leaderboard-command', function(req, res) {
 // command.html will directly use the same socket connection
 io.on('connection', function(socket){
   socket.on('new_score_command', function(msg){
-    collection.insert(msg);
+    if(collection)
+    {
+      //collection.insert(msg);
+    }
     var data = JSON.parse(msg);
     if (!data.message)  {
       return false;
