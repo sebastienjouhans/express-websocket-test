@@ -1,0 +1,32 @@
+<!doctype html>
+<html>
+    <head></head>
+    <body onload="init();">
+
+            <br />
+            <input name="txtField1" type="text" id="txtField1" style="width:90%;" />
+            <br />
+    
+
+        <button type="button" 
+            name="btnScanBarcode" 
+            id="btnScanBarcode" 
+            style="height:56px;border-width:0px;"
+            onclick="javascript:startBarcodeScanner();">
+            <img src="http://berrywing.com/images/barcode_2d.png" style="height: 50px; width: 50px">
+        </button>
+
+        <script>
+            function init()
+            {
+                document.body.requestFullscreen();
+            }
+
+            function startBarcodeScanner() 
+            {    
+                alert("Using client JavaScript to start scanner.");
+                window.location.href = 'bwstw://startscanner?field=txtField1';
+            }
+        </script>
+    </body>
+</html>
