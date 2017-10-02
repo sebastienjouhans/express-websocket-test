@@ -17,8 +17,6 @@
           {
             $('#messages').append($('<li>').html(data.message));
             console.log(data);
-
-            socket.emit('leaderboard-updated-success');
           }
         });
 
